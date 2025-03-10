@@ -29,9 +29,9 @@ class BankStatementController:
         self.temperature = temperature
         self.batch_size = batch_size
         # 加载配置文件并初始化AI处理器
-        with open('../script/config.json', 'r') as f:
-            self.config = json.load(f)
-        self.ai_processor = AIProcessor(config_path="../script/config.json")
+        # with open('../script/config.json', 'r') as f:
+        #     self.config = json.load(f)
+        self.ai_processor = AIProcessor()
 
     def process_files(self, file, model=None, temperature=0.3, batch_size=150, callback=None):
         """

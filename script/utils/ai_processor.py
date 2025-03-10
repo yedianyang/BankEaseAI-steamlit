@@ -8,12 +8,12 @@ class AIProcessor:
     AI处理器，负责调用不同的AI模型处理文本
     支持的模型：GPT-4o-mini, GPT-4o, DeepSeek, Claude-3
     """
-    def __init__(self, config_path='../script/config.json'):
+    def __init__(self):
         """
         初始化AI处理器
         :param config_path: 配置文件路径
         """
-        self.config = self._load_config(config_path)
+        #self.config = self._load_config(config_path)
         self.clients = self._initialize_clients()
         
     def _load_config(self, config_path):

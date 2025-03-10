@@ -20,7 +20,7 @@ class ConversionToiCostPage:
         """渲染转换页面"""
         col1, col2 = st.columns([1, 8])
         with col1:
-            st.image("../Assets/iCost_icon.png", width=70)
+            st.image("./Assets/iCost_icon.png", width=70)
         with col2:
             st.header("iCost模版")
         
