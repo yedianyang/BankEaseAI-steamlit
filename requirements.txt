@@ -24,3 +24,16 @@ tqdm>=4.65.0
 Pillow>=10.0.0
 beautifulsoup4>=4.13.0
 lxml>=5.3.0
+
+# 用户认证和支付
+streamlit-authenticator>=0.2.0
+stripe>=7.0.0
+plotly>=6.0.0
+
+# API 服务依赖
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-jose[cryptography]>=3.3.0
+python-multipart>=0.0.6
+email-validator>=2.1.0
+pydantic[email]>=2.5.0

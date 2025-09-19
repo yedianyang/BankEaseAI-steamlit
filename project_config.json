@@ -1,0 +1,106 @@
+{
+  "project_name": "BankEaseAI",
+  "project_type": "Hybrid Web Application (Streamlit + FastAPI)",
+  "description": "银行对账单AI处理应用，支持Web界面和API服务，PDF转Excel/CSV",
+  "main_files": {
+    "web_app": "script/main.py",
+    "api_service": "api/main.py"
+  },
+  "virtual_env": "bankeaseai",
+  "ports": {
+    "web_app": 8501,
+    "api_service": 8000
+  },
+  "startup_commands": {
+    "web_development": "source bankeaseai/bin/activate && python -m streamlit run script/main.py",
+    "web_production": "export STREAMLIT_ENV=production && source bankeaseai/bin/activate && python -m streamlit run script/main.py",
+    "api_service": "source bankeaseai/bin/activate && uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload",
+    "web_script": "./start_production.sh",
+    "api_script": "./start_api.sh"
+  },
+  "access_urls": {
+    "web_app": {
+      "local": "http://localhost:8501",
+      "network": "http://10.0.0.156:8501",
+      "external": "http://204.188.233.66:8501"
+    },
+    "api_service": {
+      "local": "http://localhost:8000",
+      "docs": "http://localhost:8000/docs",
+      "health": "http://localhost:8000/health"
+    }
+  },
+  "environment_variables": {
+    "required": ["OPENAI_API_KEY"],
+    "optional": ["ANTHROPIC_API_KEY", "OUTPUT_DIR"],
+    "production": ["STREAMLIT_ENV=production"],
+    "api": ["JWT_SECRET_KEY"]
+  },
+  "features": {
+    "core": [
+      "PDF银行对账单解析",
+      "AI智能文本处理（GPT-4o）",
+      "数据格式转换（Excel/CSV）",
+      "用户认证系统（注册/登录）",
+      "使用量限制和权限控制"
+    ],
+    "architecture": [
+      "双模式部署（Web + API）",
+      "前后端分离架构",
+      "RESTful API设计",
+      "JWT令牌认证",
+      "异步处理支持"
+    ],
+    "security": [
+      "PBKDF2+盐值密码哈希",
+      "JWT令牌认证",
+      "CORS跨域支持",
+      "生产级错误处理"
+    ],
+    "performance": [
+      "WAL模式数据库",
+      "并发访问支持",
+      "异步文件处理",
+      "健康检查监控"
+    ]
+  },
+  "database": {
+    "type": "SQLite",
+    "file": "simple_users.db",
+    "features": ["WAL模式", "并发访问", "PBKDF2+盐值密码哈希"]
+  },
+  "api_endpoints": {
+    "auth": [
+      "POST /api/auth/register",
+      "POST /api/auth/login",
+      "GET /api/auth/me",
+      "POST /api/auth/logout"
+    ],
+    "files": [
+      "POST /api/files/upload",
+      "POST /api/files/process",
+      "GET /api/files/download/{file_id}",
+      "GET /api/files/status/{task_id}"
+    ],
+    "users": [
+      "GET /api/users/profile",
+      "PUT /api/users/profile",
+      "GET /api/users/usage",
+      "GET /api/users/permissions"
+    ],
+    "dashboard": [
+      "GET /api/dashboard/stats",
+      "GET /api/dashboard/database-stats",
+      "GET /api/dashboard/recent-activity"
+    ]
+  },
+  "ai_guidance": {
+    "when_user_opens_project": [
+      "检查虚拟环境是否存在",
+      "提供启动命令选项（Web应用或API服务）",
+      "根据用户需求选择开发或生产环境",
+      "提供访问URL（Web:8501, API:8000）",
+      "解释项目功能和架构特性"
+    ]
+  }
+}

@@ -1,14 +1,18 @@
 import os
 import pandas as pd
-from utils import extract_text_from_pdf, clean_bank_statement_text, process_batches
-from utils.ai_processor import AIProcessor
+from script.utils import extract_text_from_pdf, clean_bank_statement_text, process_batches
+from script.utils.ai_processor import AIProcessor
+# 使用简化的认证管理器
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from script.utils.api_client import get_api_client
 import json
 import streamlit as st
 
 # Import functions from pdf_processor and batch_processor
 # Adjust the import paths if your project structure differs
-from utils.pdf_processor import extract_text_from_pdf, clean_bank_statement_text
-from utils.batch_processor import process_batches, get_batch_status
+from script.utils.pdf_processor import extract_text_from_pdf, clean_bank_statement_text
+from script.utils.batch_processor import process_batches, get_batch_status
 
 
 class BankStatementController:
@@ -28,6 +32,7 @@ class BankStatementController:
         self.model = model
         self.temperature = temperature
         self.batch_size = batch_size
+        self.api_client = get_api_client()
         # 加载配置文件并初始化AI处理器
         # with open('../script/config.json', 'r') as f:
         #     self.config = json.load(f)
@@ -195,3 +200,35 @@ class BankStatementController:
         with open('script/config.json', 'w') as f:
             json.dump(self.config, f, indent=4)
         return True
+    
+    def check_user_permissions(self, file_count=1):
+        """检查用户权限（使用API）"""
+        if not st.session_state.get('logged_in'):
+            st.error("请先登录")
+            return False
+        
+        # 检查API服务状态
+        if not self.api_client.check_api_health():
+            st.error("⚠️ API服务未运行，请先启动API服务")
+            return False
+        
+        # 通过API检查权限
+        result = self.api_client.process_files(file_count)
+        if "error" in result:
+            if "超出月度使用限制" in result["error"]:
+                st.error("超出月度使用限制，请升级订阅计划")
+            else:
+                st.error(f"权限检查失败: {result['error']}")
+            return False
+        
+        return True
+    
+    def log_user_usage(self, file_count=1):
+        """记录用户使用量（使用API）"""
+        if st.session_state.get('logged_in'):
+            # 通过API记录使用量
+            result = self.api_client.process_files(file_count)
+            if "error" in result:
+                st.error(f"使用量记录失败: {result['error']}")
+            else:
+                st.success(f"使用量已记录: {file_count} 个文件")

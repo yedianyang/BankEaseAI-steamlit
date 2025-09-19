@@ -20,9 +20,23 @@ class ConversionToiCostPage:
         """渲染转换页面"""
         col1, col2 = st.columns([1, 8])
         with col1:
-            st.image("Assets/iCost_icon.png", width=70)
+            try:
+                st.image("Assets/iCost_icon.png", width=70)
+            except:
+                st.write("🏦")  # 如果图片加载失败，显示emoji
         with col2:
             st.header("iCost模版")
+        
+        # 检查用户登录状态和权限
+        if not st.session_state.get('logged_in', False):
+            st.warning("⚠️ 请先登录以使用PDF转换功能")
+            st.info("💡 点击右上角的'登录/注册'按钮创建账户或登录")
+            return
+        
+        # 检查用户权限
+        if self.controller and hasattr(self.controller, 'check_user_permissions'):
+            if not self.controller.check_user_permissions():
+                return
         
         # 在 session_state 中添加一个键来追踪文件上传器的键
         if 'uploader_key' not in st.session_state:
@@ -199,6 +213,7 @@ class ConversionToiCostPage:
                             file_name="processed_files.zip",
                             mime="application/zip"
                         )
+                    
                     else:
                         # 单文件：直接创建Excel文件在内存中
                         excel_buffer = io.BytesIO()
@@ -218,6 +233,11 @@ class ConversionToiCostPage:
                             file_name=processed_files[0]['output_file'],
                             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         )
+                    
+                    # 记录用户使用量（只记录一次）
+                    if self.controller:
+                        self.controller.log_user_usage(len(processed_files))
+                        st.success(f"✅ 成功处理 {len(processed_files)} 个文件！使用量已记录。")
 
     def update_file_table(self):
         """更新文件表格显示"""
