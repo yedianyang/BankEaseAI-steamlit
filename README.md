@@ -1,20 +1,23 @@
 # BankEaseAI - 银行对账单AI处理应用
 
-BankEaseAI是一个现代化的银行对账单AI处理应用，支持Web界面和API服务，可以将PDF银行对账单转换为iCost格式。
+BankEaseAI是一个现代化的银行对账单AI处理应用，采用React + Next.js + FastAPI架构，可以将PDF银行对账单转换为Excel/CSV格式。
 
 ## 🚀 快速启动
 
-### 方式1：Web应用（Streamlit）
+### 方式1：现代化前端（React + Next.js）
 ```bash
+# 安装前端依赖
+cd frontend && npm install
+
 # 开发环境
-source bankeaseai/bin/activate && python -m streamlit run script/main.py
+npm run dev
 
 # 生产环境
-./start_production.sh
+npm run build && npm start
 ```
-**访问地址**: http://localhost:8501
+**访问地址**: http://localhost:3000
 
-### 方式2：API服务（FastAPI）
+### 方式2：后端API服务（FastAPI）
 ```bash
 # 启动API服务
 ./start_api.sh
@@ -22,13 +25,20 @@ source bankeaseai/bin/activate && python -m streamlit run script/main.py
 **API文档**: http://localhost:8000/docs  
 **健康检查**: http://localhost:8000/health
 
-### 方式3：同时运行（推荐）
+### 方式3：传统UI（Streamlit）
 ```bash
-# 终端1：启动API服务
+# 启动传统UI
+./start_production.sh
+```
+**访问地址**: http://localhost:8501
+
+### 方式4：完整系统（推荐）
+```bash
+# 终端1：启动后端API
 ./start_api.sh
 
-# 终端2：启动Web应用
-./start_production.sh
+# 终端2：启动现代化前端
+cd frontend && npm run dev
 ```
 
 ## 功能特性
@@ -41,11 +51,12 @@ source bankeaseai/bin/activate && python -m streamlit run script/main.py
 - 📈 使用量统计和权限控制
 
 ### 🏗️ 架构特性
-- 🌐 **双模式部署**：Web应用 + API服务
-- 🔄 **前后端分离**：支持多种前端技术栈
+- 🌐 **现代化架构**：React + Next.js + FastAPI
+- 🔄 **前后端分离**：API优先设计，业务逻辑在后端
 - 🛡️ **安全认证**：JWT令牌 + PBKDF2密码哈希
 - 📊 **实时监控**：健康检查和状态监控
-- 🚀 **高性能**：异步处理和并发支持
+- 🚀 **高性能**：异步处理、SSR/SSG支持
+- 📱 **响应式设计**：移动端和桌面端适配
 
 ## 本地运行
 
@@ -55,22 +66,32 @@ git clone https://github.com/yourusername/BankEaseAI-steamlit.git
 cd BankEaseAI-steamlit
 ```
 
-### 2. 创建虚拟环境
+### 2. 环境准备
 ```bash
+# 安装Python依赖
 python3 -m venv bankeaseai
 source bankeaseai/bin/activate  # macOS/Linux
-# 或
-bankeaseai\Scripts\activate  # Windows
-```
-
-### 3. 安装依赖
-```bash
 pip install -r requirements.txt
+
+# 安装Node.js依赖
+cd frontend
+npm install
 ```
 
-### 4. 运行应用
+### 3. 运行应用
 ```bash
-streamlit run script/main.py
+# 方式1：启动完整系统（推荐）
+# 终端1：启动后端
+./start_api.sh
+
+# 终端2：启动前端
+cd frontend && npm run dev
+
+# 方式2：仅启动后端API
+./start_api.sh
+
+# 方式3：仅启动传统UI
+./start_production.sh
 ```
 
 ## 🚀 生产环境部署
