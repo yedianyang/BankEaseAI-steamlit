@@ -1,14 +1,51 @@
-# BankEaseAI - Streamlit Web App
+# BankEaseAI - 银行对账单AI处理应用
 
-BankEaseAI是一个基于Streamlit的银行对账单AI处理应用，可以将银行对账单转换为iCost格式。
+BankEaseAI是一个现代化的银行对账单AI处理应用，支持Web界面和API服务，可以将PDF银行对账单转换为iCost格式。
+
+## 🚀 快速启动
+
+### 方式1：Web应用（Streamlit）
+```bash
+# 开发环境
+source bankeaseai/bin/activate && python -m streamlit run script/main.py
+
+# 生产环境
+./start_production.sh
+```
+**访问地址**: http://localhost:8501
+
+### 方式2：API服务（FastAPI）
+```bash
+# 启动API服务
+./start_api.sh
+```
+**API文档**: http://localhost:8000/docs  
+**健康检查**: http://localhost:8000/health
+
+### 方式3：同时运行（推荐）
+```bash
+# 终端1：启动API服务
+./start_api.sh
+
+# 终端2：启动Web应用
+./start_production.sh
+```
 
 ## 功能特性
 
+### 🎯 核心功能
 - 📄 PDF银行对账单解析
-- 🤖 AI智能文本处理
-- 📊 数据格式转换
-- 🌐 Web界面操作
-- 📱 响应式设计
+- 🤖 AI智能文本处理（GPT-4o）
+- 📊 数据格式转换（Excel/CSV）
+- 🔐 用户认证系统
+- 📈 使用量统计和权限控制
+
+### 🏗️ 架构特性
+- 🌐 **双模式部署**：Web应用 + API服务
+- 🔄 **前后端分离**：支持多种前端技术栈
+- 🛡️ **安全认证**：JWT令牌 + PBKDF2密码哈希
+- 📊 **实时监控**：健康检查和状态监控
+- 🚀 **高性能**：异步处理和并发支持
 
 ## 本地运行
 
@@ -35,6 +72,53 @@ pip install -r requirements.txt
 ```bash
 streamlit run script/main.py
 ```
+
+## 🚀 生产环境部署
+
+### 环境变量配置
+
+在生产环境中，设置以下环境变量：
+
+```bash
+# 生产环境模式（隐藏调试日志）
+export STREAMLIT_ENV=production
+
+# 数据库路径
+export DB_PATH=/var/lib/bankeaseai/users.db
+
+# 输出目录
+export OUTPUT_DIR=/tmp/bankeaseai
+
+# API密钥
+export OPENAI_API_KEY=your_openai_api_key
+export ANTHROPIC_API_KEY=your_anthropic_api_key
+```
+
+### 生产环境启动
+
+使用生产环境启动脚本：
+
+```bash
+# 使用生产环境启动脚本
+./start_production.sh
+
+# 或手动设置环境变量
+export STREAMLIT_ENV=production
+source bankeaseai/bin/activate
+python -m streamlit run script/main.py --server.port 8501 --server.address 0.0.0.0
+```
+
+### 日志级别
+
+- **开发环境**：显示详细日志（INFO级别）
+- **生产环境**：只显示警告和错误（WARNING级别）
+
+### 安全特性
+
+- **密码安全**：PBKDF2+盐值哈希
+- **数据库安全**：WAL模式，支持并发访问
+- **错误处理**：完善的异常处理和重试机制
+- **日志安全**：生产环境隐藏敏感信息
 
 ## Streamlit Cloud 部署
 

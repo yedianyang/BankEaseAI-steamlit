@@ -1,7 +1,17 @@
 # script/main.py
+import streamlit as st
+import os
+
+# 必须在任何其他Streamlit命令之前调用
+st.set_page_config(
+    page_title="BankEase AI",
+    page_icon="💰",
+    layout="centered",
+    initial_sidebar_state="auto",
+)
+
 from views import BankStatementView
 from controllers import BankStatementController
-import os
 
 def main():
     # 初始化控制器和视图
