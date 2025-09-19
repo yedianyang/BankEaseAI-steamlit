@@ -1,40 +1,50 @@
 {
   "project_name": "BankEaseAI",
-  "project_type": "Hybrid Web Application (Streamlit + FastAPI)",
-  "description": "银行对账单AI处理应用，支持Web界面和API服务，PDF转Excel/CSV",
+  "project_type": "Modern Web Application (React + Next.js + FastAPI)",
+  "description": "银行对账单AI处理应用，现代化前后端分离架构，PDF转Excel/CSV",
   "main_files": {
-    "web_app": "script/main.py",
-    "api_service": "api/main.py"
+    "frontend": "frontend/",
+    "backend": "api/main.py",
+    "legacy_ui": "script/main.py"
   },
   "virtual_env": "bankeaseai",
   "ports": {
-    "web_app": 8501,
-    "api_service": 8000
+    "frontend": 3000,
+    "backend": 8000,
+    "legacy_ui": 8501
   },
   "startup_commands": {
-    "web_development": "source bankeaseai/bin/activate && python -m streamlit run script/main.py",
-    "web_production": "export STREAMLIT_ENV=production && source bankeaseai/bin/activate && python -m streamlit run script/main.py",
-    "api_service": "source bankeaseai/bin/activate && uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload",
-    "web_script": "./start_production.sh",
-    "api_script": "./start_api.sh"
+    "frontend_dev": "cd frontend && npm run dev",
+    "frontend_build": "cd frontend && npm run build",
+    "frontend_start": "cd frontend && npm start",
+    "backend_dev": "source bankeaseai/bin/activate && uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload",
+    "backend_prod": "source bankeaseai/bin/activate && uvicorn api.main:app --host 0.0.0.0 --port 8000",
+    "legacy_ui": "source bankeaseai/bin/activate && python -m streamlit run script/main.py",
+    "api_script": "./start_api.sh",
+    "legacy_script": "./start_production.sh"
   },
   "access_urls": {
-    "web_app": {
-      "local": "http://localhost:8501",
-      "network": "http://10.0.0.156:8501",
-      "external": "http://204.188.233.66:8501"
+    "frontend": {
+      "local": "http://localhost:3000",
+      "network": "http://10.0.0.156:3000",
+      "external": "http://204.188.233.66:3000"
     },
-    "api_service": {
+    "backend": {
       "local": "http://localhost:8000",
       "docs": "http://localhost:8000/docs",
       "health": "http://localhost:8000/health"
+    },
+    "legacy_ui": {
+      "local": "http://localhost:8501",
+      "network": "http://10.0.0.156:8501"
     }
   },
   "environment_variables": {
     "required": ["OPENAI_API_KEY"],
     "optional": ["ANTHROPIC_API_KEY", "OUTPUT_DIR"],
-    "production": ["STREAMLIT_ENV=production"],
-    "api": ["JWT_SECRET_KEY"]
+    "frontend": ["NEXT_PUBLIC_API_URL"],
+    "backend": ["JWT_SECRET_KEY", "DATABASE_URL"],
+    "production": ["NODE_ENV=production"]
   },
   "features": {
     "core": [
@@ -45,11 +55,14 @@
       "使用量限制和权限控制"
     ],
     "architecture": [
-      "双模式部署（Web + API）",
-      "前后端分离架构",
+      "现代化前后端分离架构",
+      "React + Next.js 前端",
+      "FastAPI 后端服务",
       "RESTful API设计",
       "JWT令牌认证",
-      "异步处理支持"
+      "异步处理支持",
+      "SSR/SSG支持",
+      "响应式设计"
     ],
     "security": [
       "PBKDF2+盐值密码哈希",
@@ -96,11 +109,18 @@
   },
   "ai_guidance": {
     "when_user_opens_project": [
-      "检查虚拟环境是否存在",
-      "提供启动命令选项（Web应用或API服务）",
+      "检查Node.js和Python环境",
+      "提供启动命令选项（前端、后端、或传统UI）",
       "根据用户需求选择开发或生产环境",
-      "提供访问URL（Web:8501, API:8000）",
-      "解释项目功能和架构特性"
+      "提供访问URL（前端:3000, 后端:8000, 传统UI:8501）",
+      "解释现代化架构特性和技术栈"
+    ],
+    "development_workflow": [
+      "前端开发：React + Next.js + TypeScript",
+      "后端开发：FastAPI + Python + SQLite",
+      "API优先设计：所有业务逻辑在后端",
+      "现代化UI：响应式设计、移动端支持",
+      "部署：Vercel (前端) + Railway/Heroku (后端)"
     ]
   }
 }
