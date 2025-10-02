@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { apiClient, User, AuthResponse } from '@/lib/api';
+import { apiClient, User } from '@/lib/api';
 import toast from 'react-hot-toast';
 
 interface AuthContextType {
@@ -24,16 +24,57 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 检查认证状态
   const checkAuth = async () => {
+    console.log('checkAuth started');
+
+    // 确保在客户端环境
+    if (typeof window === 'undefined') {
+      console.log('Server side, skipping auth check');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await apiClient.getCurrentUser();
-      if (response.success && response.data) {
+      // 检查localStorage中的模拟用户数据
+      const demoUser = localStorage.getItem('demo_user');
+      if (demoUser) {
+        console.log('Found demo user data');
+        const userData = JSON.parse(demoUser);
+        setUser(userData);
+        return;
+      }
+
+      // 检查是否有token，如果没有token就直接设置为未认证
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        console.log('No token found, setting user to null');
+        setUser(null);
+        return;
+      }
+
+      console.log('Token found, attempting API call');
+      // 如果有token，尝试API调用（带超时）
+      const timeoutPromise = new Promise<any>((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout')), 2000)
+      );
+
+      const apiPromise = apiClient.getCurrentUser();
+
+      const response = await Promise.race([apiPromise, timeoutPromise]);
+
+      if (response && response.success && response.data) {
+        console.log('API call successful');
         setUser(response.data);
       } else {
+        console.log('API call failed or no data');
         setUser(null);
       }
     } catch (error) {
+      console.log('Auth check error:', error);
+      // 如果API调用失败，清除token并设置为未认证
+      localStorage.removeItem('access_token');
       setUser(null);
     } finally {
+      console.log('Auth check completed, setting loading to false');
       setIsLoading(false);
     }
   };
@@ -43,17 +84,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true);
       const response = await apiClient.login(username, password);
-      
+
       if (response.success && response.data) {
         setUser(response.data.user);
         toast.success(`欢迎回来, ${response.data.user.username}!`);
         return true;
-      } else {
-        toast.error(response.error || '登录失败');
-        return false;
       }
+
+      toast.error(response.error || '登录失败');
+      setUser(null);
+      return false;
     } catch (error) {
       toast.error('登录时发生错误');
+      setUser(null);
       return false;
     } finally {
       setIsLoading(false);
@@ -67,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await apiClient.register(username, email, password);
       
       if (response.success) {
-        toast.success('注册成功！请使用新账户登录。');
+        toast.success('注册成功！');
         return true;
       } else {
         toast.error(response.error || '注册失败');
