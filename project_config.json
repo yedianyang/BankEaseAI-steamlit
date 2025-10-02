@@ -65,8 +65,9 @@
       "响应式设计"
     ],
     "security": [
-      "PBKDF2+盐值密码哈希",
+      "bcrypt密码哈希",
       "JWT令牌认证",
+      "角色权限管理（管理员/普通用户）",
       "CORS跨域支持",
       "生产级错误处理"
     ],
@@ -79,8 +80,8 @@
   },
   "database": {
     "type": "SQLite",
-    "file": "simple_users.db",
-    "features": ["WAL模式", "并发访问", "PBKDF2+盐值密码哈希"]
+    "file": "bankeaseai.db",
+    "features": ["WAL模式", "并发访问", "bcrypt密码哈希", "角色权限管理"]
   },
   "api_endpoints": {
     "auth": [

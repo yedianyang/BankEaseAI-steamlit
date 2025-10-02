@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# HTTPS 证书
+.cert/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

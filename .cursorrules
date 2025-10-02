@@ -57,9 +57,10 @@ cd frontend && npm run dev
 - 移动端支持
 
 ## 数据库
-- SQLite数据库：`simple_users.db`
+- SQLite数据库：`bankeaseai.db`
 - WAL模式，支持并发访问
-- PBKDF2+盐值密码哈希
+- bcrypt密码哈希
+- 角色权限管理（管理员/普通用户）
 
 ## 访问地址
 - 现代化前端：http://localhost:3000

@@ -14,7 +14,7 @@ import {
 
 const navigation = [
   { name: '仪表板', href: '/dashboard', icon: BarChart3 },
-  { name: '文件转换', href: '/convert', icon: FileText },
+  { name: '文件管理', href: '/files', icon: FileText },
   { name: '文件上传', href: '/upload', icon: Upload },
   { name: '设置', href: '/settings', icon: Settings },
 ];
